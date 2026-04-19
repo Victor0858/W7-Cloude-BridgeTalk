@@ -1,0 +1,14 @@
+{
+  "name": "bridgetalk-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2024-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "my-d1-sql-db",
+      "database_id": "7bb13e92-18be-433a-9708-189336509160",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

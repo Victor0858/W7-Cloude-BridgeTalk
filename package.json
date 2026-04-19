@@ -1,0 +1,20 @@
+{
+  "name": "bridgetalk-worker",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev --remote",
+    "dev:local": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:migrate:remote": "wrangler d1 migrations apply my-d1-sql-db --remote",
+    "db:migrate:local": "wrangler d1 migrations apply my-d1-sql-db --local",
+    "db:seed:remote": "wrangler d1 execute my-d1-sql-db --remote --file=migrations/0002_seed_data.sql",
+    "db:seed:local": "wrangler d1 execute my-d1-sql-db --local --file=migrations/0002_seed_data.sql",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241106.0",
+    "typescript": "^5.6.3",
+    "wrangler": "^3.88.0"
+  }
+}
