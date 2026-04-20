@@ -92,12 +92,20 @@ function SavedMatchCard({ profile }: { profile: Profile }) {
 
 // ─── Main dashboard ───────────────────────────────────────────────────────────
 export default function DashboardPage() {
+  type DashboardProfile = {
+    proficiency_level: string;
+    native_language: string;
+    learning_language: string;
+    reliability_score: number;
+  };
   const [data, setData] = useState<{
     upcoming: Session[];
     saved: Profile[];
     completed_sessions: number;
-    profile: { proficiency_level: string; native_language: string; learning_language: string; reliability_score: number } | null;
+    recent_feedback: unknown[];
+    profile: DashboardProfile | null | unknown;
   } | null>(null);
+  const profile = data?.profile as DashboardProfile | null | undefined;
   const [loading, setLoading] = useState(true);
 
   const currentUserId = typeof window !== 'undefined'
@@ -156,13 +164,13 @@ export default function DashboardPage() {
             },
             {
               label: 'Reliability Score',
-              value: loading ? '—' : `${data?.profile?.reliability_score?.toFixed(1) ?? '5.0'} / 5`,
+              value: loading ? '—' : `${profile?.reliability_score?.toFixed(1) ?? '5.0'} / 5`,
               icon: '🛡️',
               color: 'bg-green-50 border-green-100',
             },
             {
               label: 'Current Level',
-              value: loading ? '—' : (data?.profile?.proficiency_level ?? '—'),
+              value: loading ? '—' : (profile?.proficiency_level ?? '—'),
               icon: '📈',
               color: 'bg-purple-50 border-purple-100',
             },
