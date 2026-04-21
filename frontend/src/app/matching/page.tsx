@@ -266,7 +266,7 @@ export default function MatchingPage() {
     try {
       if (savedIds.has(userId)) return;
       await api.saveMatch(currentUserId, userId);
-      setSavedIds((prev) => new Set([...prev, userId]));
+      setSavedIds((prev) => { const next = new Set(prev); next.add(userId); return next; });
       await api.trackEvent('match_saved', currentUserId, { target_user_id: userId });
     } catch {
       // silent
