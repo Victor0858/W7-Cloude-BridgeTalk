@@ -657,10 +657,39 @@ export default {
     }
 
     const url = new URL(request.url);
-    const { pathname } = url;
+    // Normalize: collapse double-slashes, strip trailing slash
+    const pathname = ('/' + url.pathname.replace(/\/+/g, '/').replace(/^\/+/, '').replace(/\/+$/, '')) || '/';
     const method = request.method;
 
     try {
+      // Root & API index — helpful for direct browser access / debugging
+      if (method === 'GET' && (pathname === '/' || pathname === '/api')) {
+        return ok({
+          service: 'bridgetalk-api',
+          status: 'ok',
+          version: '1.0.0',
+          endpoints: [
+            'GET  /api/health',
+            'GET  /api/users',
+            'GET  /api/profiles',
+            'POST /api/profiles',
+            'GET  /api/profiles/:id',
+            'GET  /api/matches/saved?user_id=',
+            'POST /api/matches/save',
+            'POST /api/waitlist',
+            'GET  /api/topic-packs',
+            'POST /api/trial-invites',
+            'GET  /api/sessions?user_id=',
+            'POST /api/sessions',
+            'PUT  /api/sessions/:id',
+            'POST /api/session-notes',
+            'POST /api/feedback',
+            'GET  /api/dashboard/:userId',
+            'POST /api/analytics',
+          ],
+        });
+      }
+
       // Health
       if (method === 'GET' && pathname === '/api/health') return handleHealth();
 
@@ -707,10 +736,11 @@ export default {
       // Analytics
       if (method === 'POST' && pathname === '/api/analytics') return handleAnalytics(env.DB, request);
 
-      return err('Not found', 404);
+      return err(`Not found: ${method} ${pathname}`, 404);
     } catch (e) {
       console.error('Worker error:', e);
-      return err('Internal server error', 500);
+      const msg = e instanceof Error ? e.message : String(e);
+      return err(`Internal server error: ${msg}`, 500);
     }
   },
 };
